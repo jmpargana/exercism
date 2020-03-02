@@ -1,21 +1,32 @@
 pub fn encode(n: u64) -> String {
     let segments = group(n);
 
-    const POWERS: [&str; 7] = [" quintillion", " quadrillion", 
-                               " trillion", " billion",
-                               " million", " thousand", ""];
+    const POWERS: [&str; 7] = [
+        " quintillion",
+        " quadrillion",
+        " trillion",
+        " billion",
+        " million",
+        " thousand",
+        "",
+    ];
 
-    if n == 0 { return "zero".to_string() }
-    
-    segments.iter().enumerate()
-        .filter(|(_,b)| **b != 0)
-        .fold(String::new(), |mut acc, (i, val)| {
-            if !acc.is_empty() { acc += " "; }
+    if n == 0 {
+        return "zero".to_string();
+    }
+
+    segments.iter().enumerate().filter(|(_, b)| **b != 0).fold(
+        String::new(),
+        |mut acc, (i, val)| {
+            if !acc.is_empty() {
+                acc += " ";
+            }
 
             acc += &hundreds(*val);
-            acc += POWERS[POWERS.len()-segments.len()+i];
+            acc += POWERS[POWERS.len() - segments.len() + i];
             acc
-    })
+        },
+    )
 }
 
 pub fn digits(n: u64) -> String {
@@ -30,7 +41,8 @@ pub fn digits(n: u64) -> String {
         8 => "eight",
         9 => "nine",
         _ => "",
-    }.to_string()
+    }
+    .to_string()
 }
 
 pub fn teens(n: u64) -> String {
@@ -46,7 +58,8 @@ pub fn teens(n: u64) -> String {
         18 => "eighteen",
         19 => "nineteen",
         _ => "",
-    }.to_string()
+    }
+    .to_string()
 }
 
 pub fn decimals(n: u64) -> String {
@@ -64,25 +77,29 @@ pub fn decimals(n: u64) -> String {
         _ => "",
     };
 
-    if n % 10 != 0 { return format!("{}-{}", temp, digits(n%10)) }
+    if n % 10 != 0 {
+        return format!("{}-{}", temp, digits(n % 10));
+    }
     temp.to_string()
 }
 
 pub fn hundreds(n: u64) -> String {
     match n {
-        n if n % 100 == 0 && n / 100 != 0 => format!("{} {}", 
-                    digits(n/100), 
-                    "hundred".to_string()),
-        0..=99 => decimals(n%100),
-        _ => format!("{} {} {}", 
-                    digits(n/100), 
-                    "hundred".to_string(), 
-                    decimals(n%100))       
+        n if n % 100 == 0 && n / 100 != 0 => {
+            format!("{} {}", digits(n / 100), "hundred".to_string())
+        }
+        0..=99 => decimals(n % 100),
+        _ => format!(
+            "{} {} {}",
+            digits(n / 100),
+            "hundred".to_string(),
+            decimals(n % 100)
+        ),
     }
 }
 
 pub fn group(n: u64) -> Vec<u64> {
-    let mut n = n;  // make mutable
+    let mut n = n; // make mutable
     let mut result: Vec<u64> = Vec::new();
 
     while n > 0 {
