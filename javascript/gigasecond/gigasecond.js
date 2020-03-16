@@ -1,3 +1,6 @@
 export const gigasecond = (startDate) => {
-  return new Date(startDate.getTime() + Math.pow(10, 9))
+  let endDate = new Date(startDate);
+  endDate.setTime( startDate.getTime() + Math.pow(10, 12) );
+
+  return endDate
 };

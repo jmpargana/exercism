@@ -1,54 +1,59 @@
 export class List {
-  constructor(list) {
-    this.list = list || [];
+  constructor(values) {
+    this.values = values || [] 
   }
 
   append(other) {
-    return new List([...this.list, ...other.list])
+    return new List([...this.values, ...other.values])
   }
 
   concat(listOfLists) {
-    listOfLists.forEach(list => this.list.append(list)) 
-    return new List(this.list)
+    let newList = this;
+    listOfLists.values.map(list => newList = newList.append(list))
+    return newList
   }
 
-  filter(predicate) {
-    this.list.forEach((elem, index) => {
-      if (!predicate(elem)) {
-        this.list.splice(index, 1)
-      }
-    })
-    return new List(this.list)
+  filter(func) {
+    let result = []
+    for (var i = 0; this.values.length; i++) 
+      if (func(this.values[i])) result.push(this.values[i])
+   
+    return new List(result)
   }
 
   map(func) {
-    this.list.forEach(elem => func(elem));
-    return new List(this.list)
+    let result = []
+    for (var i = 0; i < this.values.length; i++) result.push(func(this.values[i]))
+    return new List(result)
   }
 
   length() {
     let len = 0;
-    while (this.list[len]) len++
+    for (var i = 0; i < this.values.length; i++) len++
     return len;
   }
 
-  foldl(func, acc) {
-    this.list.forEach(elem => func(acc, elem))
+  foldl(func, start) {
+    let acc = start
+    for (let i = 0; i < this.values.length; i++) 
+      acc = func(acc, this.values[i])
+
     return acc
   }
 
-  foldr(func, acc) {
-    for (var i=this.length()-1; i>=0; i--) {
-      acc = func(acc, this.list[i])
-    }
+  foldr(func, start) {
+    let acc = start
+    for (let i = this.values.length - 1; i >= 0; i--)
+      acc = func(acc, this.values[i])
+
     return acc
   }
 
   reverse() {
-    let result = [];
-    for (var i=this.length()-1; i>=0; i--) {
-      result.push(this.list[i])
-    }
+    let result = []
+    for (let i = this.values.length - 1; i >= 0; i--) 
+      result.push(this.values[i])
+
     return new List(result)
   }
 }
